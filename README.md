@@ -47,6 +47,12 @@
   docker logs torch-notebook
   ```
 
+- `GET` 로그가 너무 많이 생겨서 토큰이 묻혀버린 경우 다음 명령어를 실행한다.
+
+  ```shell
+  docker exec torch-notebook jupyter notebook list
+  ```
+
 ## **VSCode** 와 연동하기 
 
 1. **vscode** 에서 [python 확장](https://marketplace.visualstudio.com/items?itemName=ms-python.python) 을 설치한다.
