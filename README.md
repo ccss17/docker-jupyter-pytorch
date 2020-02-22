@@ -1,83 +1,56 @@
-# Features
-This image contains pytorch, jupyter notebook, tensorboardx, and other useful python packages (See Dockerfile).  
-Once instantiated, it'll run a jupyter notebook server for you (See start.sh). 
+# torch-notebook
 
-Default workdir is /workspace which is the root folder for jupyter notebook.  
-You can mount the folder in your host os to /workspace.  
+이 레포지토리는 https://github.com/jxcodetw/docker-jupyter-pytorch 을 포크하였습니다. 자세한 설명은 오리지널 레포지토리의 `README.md` 를 참조해주세요. 
 
-You can run this image with your own user/group. So that the files created won't change the owner/group to root.  
+이 레포지토리는 `pytorch` 를 비롯하여 `jupyter notebook`, `tensorflow`, `tensorboardx` 등등 기계학습을 공부할 때 유용한 패키지들이 설치되어 있는 도커 이미지를 제작하기 위한 빌드 스크립트(`Dockerfile`) 을 관리하고 있습니다.
 
-# Requirements
-You'll need nvidia-docker v2 to run with gpu support.  
-And for the driver issue please refer to FAQs.  
+## 오리지널 레포지토리로부터 달라진 내용
 
-# Example Usage
+- `torchtext` 패키지를 추가하였습니다. 
 
-```bash
-$ NV_GPU=0,1 nvidia-docker run -it \
---name testorch \
--u $(id -u ${USER}):$(id -g ${USER}) \
--v $PWD:/workspace \
-jxcodetw/jupyter-pytorch
+- 윈도우에서 원활한 동작을 위하여 `jupyter` 실행옵션에 `--allow-root` 옵션을 추가하였습니다. 
 
-# arguments
-# NV_GPU controls gpu isolation
-# --name [your custom name]
-# -u save file with permission as current user
-# $PWD mount current directory to jupyter's startup folder (/workspace)
-```
+# 사용법
 
-# FAQs
+## 이미지 시작
 
-In this FAQ, there are the solutions I used but not necessarily the best approaches :p.
+- `nvidia-docker` 가 설치되어 있는 리눅스 유저의 사용법
 
-## Which Nvidia driver version to use?
-This image inherited from pytorch/pytorch:latest. You should check the cuda version they used.
-https://hub.docker.com/r/pytorch/pytorch  
-I guess they build the image from this file in their source code repository.  
-https://github.com/pytorch/pytorch/blob/master/docker/pytorch/Dockerfile
+  ```shell
+  $ NV_GPU=0,1 nvidia-docker run -d \
+  --name torch-notebook \
+  -p 8888:8888 \
+  -p 6006:6006 \
+  ccss17/torch-notebook
+  # arguments
+  # NV_GPU controls gpu isolation
+  # --name [your custom name]
+  # -u save file with permission as current user
+  # $PWD mount current directory to jupyter's startup folder (/workspace)
+  ```
 
-By the time this image is created they use **nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04**
-https://hub.docker.com/r/nvidia/cuda/  
+- 일반적인 유저의 사용법
 
-And some CUDA version might need specific version of driver to work.  
-For your information, the output from my nvidia-smi is:
-```bash
-NVIDIA-SMI 410.78       Driver Version: 410.78       CUDA Version: 10.0
-```
+  ```shell
+  $ docker run -d \
+  --name torch-notebook \
+  -p 8888:8888 \
+  -p 6006:6006 \
+  ccss17/torch-notebook
+  ```
 
-## How to get token for jupyter notebook?
-you just run with -it flags and you will attach to the container and see the output from jupyter notebook.  
-After copying the token, press Ctrl+P, Ctrl+Q to detach from the container.
+## 주피터 노트북의 인증 토큰 가져오기
 
-If you start the container with -dit flags then you should print the logs to get the token.  
-```bash
-$ docker logs [container name or id]
-```
+- 주피터 노트북의 인증 토큰이 부여된 `URL` 을 알아낸다.
 
-## How do I know the container's IP address?
-To access the notebook you'll need to know the ip of the container and connect to the 8888 port.  
-```bash
-$ docker inspect -f \
-'{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' \
-[container name or id]
-```
-Then you can access the jupyter notebook via http://172.x.x.x/?token=asdfasdfasdf...asdf
+  ```shell
+  docker logs torch-notebook
+  ```
 
-If you run the container on your remote server and you want to access to it on your local machine.  
-You can use ssh tunnels:
-```bash
-ssh -L [local_port]:172.x.x.x:8888 [user]@[server-ip]
-# if you want to learn more what it is. There's a tons of tutorial on the int.ernet
-```
-Then open your browser to http://localhost:[local_port]/?token=asdfadsfasdf...asdf
+## **VSCode** 와 연동하기 
 
-## How do I set the visible GPUs in container?
-Reference: https://github.com/NVIDIA/nvidia-docker/wiki/nvidia-docker#gpu-isolation
-```bash
-$ NV_GPU=0,1 nvidia-docker ...
+1. **vscode** 에서 [python 확장](https://marketplace.visualstudio.com/items?itemName=ms-python.python) 을 설치한다.
 
-# For example, if you have two gpus on your computer
-$ NV_GPU=0 nvidia-docker ... # first container
-$ NV_GPU=1 nvidia-docker ... # second container
-```
+2. 명령 팔레트(`Ctrl+Shift+P`)에서 `Python: Specify local or remote Jupyter server for connections` 을 선택하고 주피터 노트북의 인증 토큰이 부여된 `URL` 을 붙혀넣는다. 
+
+3. 이제 로컬에서 `.ipynb` 파일을 만들고 주피터 노트북을 실행하면 **vscode** 가 도커에서 격리되어 실행중인 원격 주피터 노트북 서버에 셀을 보내고 실행한 다음 출력만 가져와서 보여주게 된다.
