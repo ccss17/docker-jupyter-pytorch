@@ -41,16 +41,18 @@
 
 - 로컬에 있는 데이터 사용할 수 있도록 경로 공유하기
 
-  경로 `d:\\repo\\ml-data` 에 있는 머신러닝 데이터를 사용하고 싶다면 `-v d:\\repo\\ml-data:/workspace` 옵션만 추가해주면 됩니다.
+  경로 `d:\repo\ml-data` 에 있는 머신러닝 데이터를 사용하고 싶다면 `-v d:\repo\ml-data:/workspace` 옵션만 추가해주면 됩니다.
 
   ```shell
   $ docker run -d \
   --name torch-notebook \
   -p 8888:8888 \
   -p 6006:6006 \
-  -v d:\\repo\\ml-data:/workspace \
+  -v d:\repo\ml-data:/workspace \
   ccss17/torch-notebook
   ```
+
+  이 경우 경로 `d:\repo\ml-data` 에 **Untitled.ipynb** 라는 파일이 생성될 수 있는데 도커 컨테이너가 주피너 노트북 실행을 위하여 생성하는 임시 파일이므로 비정상적인 것이 아닙니다.
 
 ## 주피터 노트북의 인증 토큰 가져오기
 
