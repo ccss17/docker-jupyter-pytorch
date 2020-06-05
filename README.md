@@ -39,6 +39,19 @@
   ccss17/torch-notebook
   ```
 
+- 로컬에 있는 데이터 사용할 수 있도록 경로 공유하기
+
+  경로 `d:\\repo\\ml-data` 에 있는 머신러닝 데이터를 사용하고 싶다면 `-v d:\\repo\\ml-data:/workspace` 옵션만 추가해주면 됩니다.
+
+  ```shell
+  $ docker run -d \
+  --name torch-notebook \
+  -p 8888:8888 \
+  -p 6006:6006 \
+  -v d:\\repo\\ml-data:/workspace \
+  ccss17/torch-notebook
+  ```
+
 ## 주피터 노트북의 인증 토큰 가져오기
 
 - 주피터 노트북의 인증 토큰이 부여된 `URL` 을 알아낸다.
