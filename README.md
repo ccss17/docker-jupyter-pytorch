@@ -1,4 +1,4 @@
-# torch-notebook
+# ml
 
 이 레포지토리는 https://github.com/jxcodetw/docker-jupyter-pytorch 을 포크하였습니다. 자세한 설명은 오리지널 레포지토리의 `README.md` 를 참조해주세요. 
 
@@ -18,10 +18,10 @@
 
   ```shell
   $ NV_GPU=0,1 nvidia-docker run -d \
-  --name torch-notebook \
+  --name ml \
   -p 8888:8888 \
   -p 6006:6006 \
-  ccss17/torch-notebook
+  ccss17/ml
   # arguments
   # NV_GPU controls gpu isolation
   # --name [your custom name]
@@ -33,10 +33,10 @@
 
   ```shell
   $ docker run -d \
-  --name torch-notebook \
+  --name ml \
   -p 8888:8888 \
   -p 6006:6006 \
-  ccss17/torch-notebook
+  ccss17/ml
   ```
 
 - 로컬에 있는 데이터 사용할 수 있도록 경로 공유하기
@@ -45,11 +45,11 @@
 
   ```shell
   $ docker run -d \
-  --name torch-notebook \
+  --name ml \
   -p 8888:8888 \
   -p 6006:6006 \
   -v d:\repo\ml-data:/workspace \
-  ccss17/torch-notebook
+  ccss17/ml
   ```
 
   이 경우 경로 `d:\repo\ml-data` 에 **Untitled.ipynb** 라는 파일이 생성될 수 있는데 도커 컨테이너가 주피너 노트북 실행을 위하여 생성하는 임시 파일이므로 비정상적인 것이 아닙니다.
@@ -59,13 +59,13 @@
 - 주피터 노트북의 인증 토큰이 부여된 `URL` 을 알아낸다.
 
   ```shell
-  docker logs torch-notebook
+  docker logs ml
   ```
 
 - `GET` 로그가 너무 많이 생겨서 토큰이 묻혀버린 경우 다음 명령어를 실행한다.
 
   ```shell
-  docker exec torch-notebook jupyter notebook list
+  docker exec ml jupyter notebook list
   ```
 
 ## **VSCode** 와 연동하기 
