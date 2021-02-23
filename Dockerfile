@@ -7,8 +7,10 @@ RUN set -x \
     && /opt/conda/bin/conda install -q -y nodejs opencv Cython tensorflow pandas scikit-learn matplotlib seaborn jupyter jupyterlab \
     && /opt/conda/bin/conda install -q -c conda-forge tensorboardx \
     && /opt/conda/bin/conda clean -ya \
-    && pip install -q jupyter_tensorboard torchvision scikit-image torchtext \
+    && pip install -q jupyter_tensorboard torchvision scikit-image torchtext keras
+RUN set -x\
     && jupyter labextension install jupyterlab_tensorboard \
+    && pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U; exit 0\
     && mkdir -p /home/me && chmod 1777 /home/me
 ENV HOME /home/me
 # tensorboard
